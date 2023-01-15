@@ -1,0 +1,9 @@
+"0","coffee_ratings <- readr::read_csv(""coffee_ratings.csv"")"
+"2","[1mRows: [22m[34m1339[39m [1mColumns: [22m[34m43[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (24): species, owner, country_of_origin, farm_name, lot_number, mill, ico_number, com...
+[32mdbl[39m (19): total_cup_points, number_of_bags, aroma, flavor, aftertaste, acidity, body, bal..."
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."

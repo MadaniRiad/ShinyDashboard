@@ -1,0 +1,26 @@
+{
+    "id": "61C0E823",
+    "path": "D:/Dev/test/server.R",
+    "project_path": "server.R",
+    "type": "r_source",
+    "hash": "3026026555",
+    "contents": "",
+    "dirty": false,
+    "created": 1673690940865.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "14,4",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1673742186,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1673742186102,
+    "read_only": false,
+    "read_only_alternatives": []
+}

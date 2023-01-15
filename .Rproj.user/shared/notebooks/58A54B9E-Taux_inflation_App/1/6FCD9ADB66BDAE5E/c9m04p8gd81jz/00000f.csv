@@ -1,0 +1,2 @@
+"0","library(geojsonio)"
+"0","worldcountry = geojson_read(""input_data/50m.geojson"", what = ""sp"")"

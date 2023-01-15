@@ -1,0 +1,2 @@
+"0","plot_map <- worldcountry[worldcountry$ADMIN %in% inf$region, ]"
+"0",""

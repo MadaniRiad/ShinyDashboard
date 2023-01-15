@@ -1,0 +1,3 @@
+"0","colnames(coffee_ratings)[colnames(coffee_ratings)==""region""] =""state"""
+"0","colnames(coffee_ratings)[colnames(coffee_ratings)==""country_of_origin""] =""region"""
+"0",""

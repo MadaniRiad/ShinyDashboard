@@ -1,0 +1,3 @@
+"0","mapdata <- map_data(""world"") ##ggplot2"
+"0","mapdata <- left_join(mapdata, coffee_ratings, by=""region"")"
+"0","mapdata<-mapdata %>% filter(!is.na(mapdata$total_cup_points)) "

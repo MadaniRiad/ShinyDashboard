@@ -1,0 +1,5 @@
+"0","library(readxl)"
+"0","#Utilisation du package readxl pour lire le contenu du fichier de notre jeu de données <<inflation.xls>>"
+"0","inflation <- read_excel(""inflation.xls"")"
+"0","#Renvoier la première partie (5 lignes) du jeu de données."
+"0","head(inflation)"

@@ -1,0 +1,23 @@
+div {
+ font-family: times, Times New Roman, times-roman, georgia, serif;
+ color: #444;
+ font-size: 15px;
+ font-weight:lighter;
+}
+
+div > p {
+  font-family:times-roman;
+  font-weight:lighter;
+
+}
+.skin-blue .main-header .logo>a {
+  font-family: times, Times New Roman, times-roman, georgia, serif;
+  color: #E0FFFF;
+  font-size:28px;
+  line-height: 44px;
+  letter-spacing: -2px;
+  font-weight: lighter;
+  text-shadow: 1px 1px 1px #00008B;
+
+}
+

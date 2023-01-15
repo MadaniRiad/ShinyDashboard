@@ -1,0 +1,2 @@
+"0","    head(select(coffee_ratings,total_cup_points,species,owner,region,state,"
+"0","                harvest_year,grading_date,variety,aroma,flavor),  n = 10)"
