@@ -4,7 +4,8 @@ author: "MADANI Riad"
 date: "2022-12-14"
 output:
   pdf_document: default
-  html_document : default
+  word_document: default
+  html_document: default
 always_allow_html: yes
 ---
 
@@ -18,7 +19,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 Le Groupe des perspectives de la Banque mondiale a construit un jeu de données mondial sur l'inflation. Ce jeu de données couvre jusqu'à 167 pays et plusieurs régions économiques dans le monde sur la période de 1980 au 2022, et comprend la mesure de l'inflation en fréquences annuelle : Inflation globale de l'indice des prix à la consommation (IPC)
 Nous avons utilisé ce jeu de données pour élaborer un tableau de bord qui nous permet de visualiser le taux d'inflation durant cette periode d'années
 
-#global.R
+# Projet Shiny Dashboard
+Notre projet contient 3 fichier .R (global, ui et server) et un fichier style.css pour la mise en forme des couleurs et des polices sur notre application
+
+# global.R
 
 Un fichier qui contient toutes les bibliothèques nécessaires a la bonne exécution de notre programme ainsi que l'importation des fichier à utilisés dont le jeu de données et le fichier geojson ("worldcountry" pour les données spatial)
 Des pré-traitement des données pour une utilisation plus adéquate a nos graphs de visualisation
@@ -58,19 +62,26 @@ if(!require(plotly)) install.packages("plotly",
                                       repos = "http://cran.us.r-project.org")
 if(!require(geojsonio)) install.packages("geojsonio", 
                                          repos = "http://cran.us.r-project.org")
-library(highcharter)
-library(tidyr)
-library(knitr)
-library(tinytex)
-library(sf)
-library(kableExtra)
+if(!require(highcharter)) install.packages("highcharter", 
+                                       repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", 
+                                            repos="http://cran.us.r-project.org")
+if(!require(knitr)) install.packages("knitr", 
+                                       repos = "http://cran.us.r-project.org")
+if(!require(tinytex)) install.packages("tinytex", 
+                                      repos = "http://cran.us.r-project.org")
+if(!require(sf)) install.packages("sf", 
+                                         repos = "http://cran.us.r-project.org")
+if(!require(kableExtra)) install.packages("kableExtra", 
+                                  repos = "http://cran.us.r-project.org")
 
 ```
 
-
+\newpage
 
 ### Lecture de notre jeu de données
 Utilisation du package readxl pour lire le contenu du fichier de notre jeu de données <<inflation.xls>> et renvoier la première partie du jeu de données.
+
 ```{r inflation}
 library(readxl)
 library(kableExtra)
@@ -87,8 +98,11 @@ library(geojsonio)
 worldcountry = geojson_read("input_data/50m.geojson", what = "sp")
 ```
 
+\newpage
+
 ### Pré-traitement de nos données :
-Pour une utilisation facile & simple ultérieurement de nos données, nous avons mis les années dans une liste en tant que chaine de caractère ainsi que de reformater notre jeu de données dans un nouveau dataframe appelé "inf" 
+Pour une utilisation facile & simple ultérieurement de nos données, nous avons mis les années dans une liste en tant que chaine de caractère ainsi que de reformater notre jeu de données dans un nouveau dataframe appelé "inf_data" 
+Enfin nous avons mis les 5 premieres lignes de notre nouveau dataframe
 
 ```{r inf, echo=TRUE}
 library(dplyr)
@@ -100,19 +114,25 @@ year<-as.character(year)
 #Reformater notre jeu de données d'une façon que nous affichons les taux d'inflation 
 #par rapport a chaque pays et a chaque années (nous avons rassembler les années 
 #dans une seule colonne <Year>)
-inf <- inflation %>% gather(year,key = "Year",value="InflationRate") 
-names(inf)<-c("region","year","inflation")
-inf$year<-as.integer(inf$year)
-head(inf) %>%
+inf_data <- inflation %>% gather(year,key = "Year",value="InflationRate") 
+names(inf_data)<-c("region","year","inflation")
+inf_data$year<-as.integer(inf_data$year)
+head(inf_data) %>%
       kable() %>%
       kable_styling(latex_options = "hold_position")
 ```
 
+Nous avons mis un sommaires des statistiques de notre nouveau jeu de données
+```{r}
+inf_data %>%
+      summary()
+```
+
 ### Pré-traitement des noms des pays et des régions économiques 
-Nous avons créer un nouveau variable nommé "country" qui contient une liste des noms de pays "region" a partir de notre nouveau dataset "inf"
+Nous avons créer un nouveau variable nommé "country" qui contient une liste des noms de pays "region" a partir de notre nouveau dataset "inf_data"
 Ensuite nous avons créer aussi une liste qui contient les régions économiques a travers le monde. (c'est un peu manuelle mais c'est efficace)
 ```{r}
-country <- c(inf$region)
+pays <- c(inf_data$region)
 unions<-c("Major advanced economies (G7)","European Union",
           "Emerging and Developing Europe","ASEAN-5",
           "Commonwealth of Independent States",
@@ -124,24 +144,26 @@ unions<-c("Major advanced economies (G7)","European Union",
 Nous avons utilisé le fichier "50m.geojson" (téléchargé depuis <src : https://datahub.io/core/geo-countries>)  pour récuperer les données spatial de chaque pays afin de les utilisés dans l'affichage de la carte 
 Voici la premiere partie (les 5 premieres ligne de notre data frame plot_map) qui contient les noms des pays contenant dans notre nouveau jeu de données "inf"
 ```{r}
-plot_map <- worldcountry[worldcountry$ADMIN %in% inf$region, ]
+plot_map <- worldcountry[worldcountry$ADMIN %in% inf_data$region, ]
 
 ```
 ### Comparaison entre quelques taux d'inflations de quelques différentes nations
 Nous avons préparer quelques données des 5 pays (Inde, Chine, Japon, USA, Rayaum Uni, France, Algérie) pour faire une comparaison entre ses nations en ce qui concerne le taux d'inflation, vous pouvez remarquer le résultat du dataframe de la nation FRANCE ci-dessous
 ```{r}
-India<-filter(inf,region=="India")
+India<-filter(inf_data,region=="India")
 India$inflation<-as.numeric(India$inflation)
 India$year<-as.numeric(India$year)
-China<-filter(inf,region=="China, People's Republic of")
-Japan<-filter(inf,region=="Japan")
-US<-filter(inf,region=="United States")
-UK<-filter(inf,region=="United Kingdom")
-Fr<-filter(inf,region=="France")
-ALG<-filter(inf,region=="Algeria")
-tail(Fr) %>% kable() %>%
+China<-filter(inf_data,region=="China, People's Republic of")
+Japan<-filter(inf_data,region=="Japan")
+US<-filter(inf_data,region=="United States")
+UK<-filter(inf_data,region=="United Kingdom")
+FR<-filter(inf_data,region=="France")
+ALG<-filter(inf_data,region=="Algeria")
+tail(FR) %>% kable() %>%
       kable_styling(latex_options = "hold_position")
 ```
+\newpage
+
 # ui.R
 Un fichier de notre projet qui contient la partie frontend ou ce qu'on appelle l'interface graphique 
 
@@ -156,7 +178,7 @@ server <- function(input, output) {
   #l'année sélectionner dans le slider pour l'affichage des taux d'inflation
   
   data_input <- reactive({
-    inf %>%
+    inf_data %>%
       filter(year == input$slider1)
   })
 
@@ -172,6 +194,7 @@ server <- function(input, output) {
 }
 ```
 
+\newpage
 
 ## Dessiner les graphes de notre Shiny Dashboard App
 ### Exemple : France
@@ -183,7 +206,7 @@ Pour le graph, nous avons utilisé le package (ggplot2) avec un theme pour une m
 library(ggplot2)
 library(highcharter)
 theme_set(theme_bw(base_size = 16))
-df<-inf %>% filter(region=="France")
+df<-inf_data %>% filter(region=="France")
 df$inflation<-as.numeric(df$inflation)
 df$year<-as.numeric(df$year)
 #plotting the data
@@ -210,13 +233,13 @@ library(ggplot2)
 library(highcharter)
 theme_set(theme_bw(base_size = 16))
 highchart() %>%
-      hc_xAxis(categories=inf$year) %>%
+      hc_xAxis(categories=inf_data$year) %>%
       hc_exporting(enabled = TRUE) %>% 
       hc_add_series(name = "India", data = India$inflation) %>%
       hc_add_series(name = "USA", data = US$inflation) %>%
       hc_add_series(name = "UK", data = UK$inflation) %>%
       hc_add_series(name = "China", data = China$inflation) %>%
-      hc_add_series(name = "France", data = Fr$inflation) %>%
+      hc_add_series(name = "France", data = FR$inflation) %>%
       hc_add_series(name="Japan",data=Japan$inflation) %>%
       hc_add_series(name="Algeria",data=ALG$inflation) %>%
       #Pour ajouter les couleurs
@@ -240,7 +263,7 @@ Pour afficher l'évolution du taux d'inflation en fonction des régions économi
 library(ggplot2)
 library(highcharter)
 theme_set(theme_bw(base_size = 16))
-union<-inf %>% filter(region=="European Union")
+union<-inf_data %>% filter(region=="European Union")
 union$year<-as.numeric(union$year)
 union$inflation<-as.numeric(union$inflation)
 #traçage des graphs
@@ -270,7 +293,7 @@ Un graph qui permet d'afficher l'évolution du taux d'inflation dans le monde en
 library(ggplot2)
 library(highcharter)
 theme_set(theme_bw(base_size = 16))
-world<-inf %>% filter(region=="World")
+world<-inf_data %>% filter(region=="World")
 world$year<-as.numeric(world$year)
 world$inflation<-as.numeric(world$inflation)
 
@@ -283,6 +306,7 @@ hchart(world,hcaes(x=year,y=inflation),type="area",color="#4B0082") %>%
   hc_subtitle(text="Source de données: IMF",align="center")  %>%
   hc_add_theme(hc_theme_elementary())
 ```
+
 ```{r pressure4, echo=FALSE, fig.cap="Taux d'inflation du monde", out.width = '70%', fig.align="center"}
 knitr::include_graphics("img/chart4.png")
 
@@ -297,7 +321,7 @@ mymap <- leaflet() %>%
         addTiles() %>%
         addPolygons(data = plot_map, color = "blue",
                     label = ~paste0("Pays : ", ADMIN," - Taux d'inflation : ",
-                                    as.numeric(inf$inflation)),
+                                    as.numeric(inf_data$inflation)),
                     weight = 1,
                     highlightOptions = highlightOptions(color = "red", 
                                                         bringToFront = TRUE, 
@@ -313,5 +337,4 @@ mymap <- leaflet() %>%
 knitr::include_graphics("img/map.png")
 
 ```
-
 

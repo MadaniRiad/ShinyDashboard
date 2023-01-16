@@ -17,11 +17,18 @@ if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran
 if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-project.org")
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org")
 if(!require(geojsonio)) install.packages("geojsonio", repos = "http://cran.us.r-project.org")
-library(shinycssloaders)
-library(highcharter)
-library(tidyr)
-library(knitr)
-library(tinytex)
+if(!require(highcharter)) install.packages("highcharter", 
+                                           repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", 
+                                     repos="http://cran.us.r-project.org")
+if(!require(knitr)) install.packages("knitr", 
+                                     repos = "http://cran.us.r-project.org")
+if(!require(tinytex)) install.packages("tinytex", 
+                                       repos = "http://cran.us.r-project.org")
+if(!require(sf)) install.packages("sf", 
+                                  repos = "http://cran.us.r-project.org")
+if(!require(kableExtra)) install.packages("kableExtra", 
+                                          repos = "http://cran.us.r-project.org")
 
 #theme_set qui appartient au package 'ggplot2' permet d'avoir des thèmes plus personalisés
 theme_set(theme_bw(base_size = 16))
@@ -34,14 +41,14 @@ worldcountry = geojson_read("input_data/50m.geojson", what = "sp")
 #Créer un vecteur contient toutes les années du jeu de données
 year<-c(1980:2022)
 year<-as.character(year)#conversion en type caractère pour l'utiliser plus tard grace à la fonction gather()
-inf<-inflation %>% gather(year,key = "Year",value="InflationRate")
-inf<-na.omit(inf) #Enlever les données NA de notre nouveau jeu données 'inf'
-#Renommer les colonnes du dataset 'inf'
-names(inf)<-c("region","year","inflation")
-inf$year<-as.integer(inf$year)
+inf_data<-inflation %>% gather(year,key = "Year",value="InflationRate")
+inf_data<-na.omit(inf_data) #Enlever les données NA de notre nouveau jeu données 'inf_data'
+#Renommer les colonnes du dataset 'inf_data'
+names(inf_data)<-c("region","year","inflation")
+inf_data$year<-as.integer(inf_data$year)
 
-#Création d'un vecteur country qui contient tout les pays du dataset 'inf'
-country <- c(inf$region)
+#Création d'un vecteur pays qui contient tout les pays du dataset 'inf_data'
+pays <- c(inf_data$region)
 
 #Création d'un vecteur unions qui contient les régions économiques du monde
 unions<-c("Major advanced economies (G7)","European Union","Emerging and Developing Europe","ASEAN-5","Commonwealth of Independent States",
@@ -49,16 +56,15 @@ unions<-c("Major advanced economies (G7)","European Union","Emerging and Develop
           "Middle East, North Africa, Afghanistan, and Pakistan")
 
 #Récupération des noms de pays du fichier 50m.geojson correspondant au pays du dataset 'inf'
-plot_map <- worldcountry[worldcountry$ADMIN %in% inf$region, ]
+plot_map <- worldcountry[worldcountry$ADMIN %in% inf_data$region, ]
 
 #Quelques pré-traitement pour l'affichage d'un graph qui compare des différents taux d'inflations de quelques différentes nations
-India<-filter(inf,region=="India")
+India<-filter(inf_data,region=="India")
 India$inflation<-as.numeric(India$inflation)
 India$year<-as.numeric(India$year)
-China<-filter(inf,region=="China, People's Republic of")
-Japan<-filter(inf,region=="Japan")
-US<-filter(inf,region=="United States")
-UK<-filter(inf,region=="United Kingdom")
-Fr<-filter(inf,region=="France")
-ALG<-filter(inf,region=="Algeria")
+China<-filter(inf_data,region=="China, People's Republic of")
+US<-filter(inf_data,region=="United States")
+UK<-filter(inf_data,region=="United Kingdom")
+FR<-filter(inf_data,region=="France")
+ALG<-filter(inf_data,region=="Algeria")
 

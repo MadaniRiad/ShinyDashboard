@@ -3,7 +3,7 @@ server <- function(input, output) {
   #Création d'une fonction réactive data_input() qui réagit en fonction de l'année sélectionner dans le slider
   #pour l'affichage des taux d'inflation en fonction de l'année
   data_input <- reactive({
-    inf %>%
+    inf_data %>%
       filter(year == input$slider1)
   })
 
@@ -18,10 +18,15 @@ server <- function(input, output) {
   #'mytable1' Pour afficher notre jeu de données
   output$mytable1 <- renderDataTable(data_input())
 
+  output$summary <- renderPrint({
+    inf_data %>%
+      summary()
+  })
 
-  #'hcontainer' Pour afficher l'évolution du taux d'inflation en fonction du pays au cours des années
-  output$hcontainer <- renderHighchart ({
-    df<-inf %>% filter(region==input$country)
+
+  #'graph1' Pour afficher l'évolution du taux d'inflation en fonction du pays au cours des années
+  output$graph1 <- renderHighchart ({
+    df<-inf_data %>% filter(region==input$pays)
     df$inflation<-as.numeric(df$inflation)
     df$year<-as.numeric(df$year)
     #plotting the data
@@ -38,29 +43,28 @@ server <- function(input, output) {
 
     })
 
-  #'hc2' Pour afficher une comparaison de l'évolution du taux d'inflation
+  #'graph2' Pour afficher une comparaison de l'évolution du taux d'inflation
   # en fonction des 5 pays (propre choix) au cours des années
-  output$hc2<-renderHighchart({
+  output$graph2<-renderHighchart({
     highchart() %>%
-      hc_xAxis(categories=inf$year) %>%
+      hc_xAxis(categories=inf_data$year) %>%
       hc_add_series(name = "India", data = India$inflation) %>%
       hc_add_series(name = "USA", data = US$inflation) %>%
       hc_add_series(name = "UK", data = UK$inflation) %>%
       hc_add_series(name = "China", data = China$inflation) %>%
-      hc_add_series(name = "France", data = Fr$inflation) %>%
-      hc_add_series(name="Japan",data=Japan$inflation) %>%
+      hc_add_series(name = "France", data = FR$inflation) %>%
       hc_add_series(name="Algeria",data=ALG$inflation) %>%
       #Pour ajouter des couleurs
-      hc_colors(c("red","blue","brown","purple","darkpink","orange","green")) %>%
+      hc_colors(c("red","blue","brown","purple","orange","green")) %>%
       hc_add_theme(hc_theme_elementary())
 
     })
 
 
-  #'hc3' Pour afficher l'évolution du taux d'inflation
+  #'graph3' Pour afficher l'évolution du taux d'inflation
   # en fonction des régions économiques dand le monde au cours des années
-  output$hc3<-renderHighchart({
-    union<-inf %>% filter(region==input$region)
+  output$graph3<-renderHighchart({
+    union<-inf_data %>% filter(region==input$region)
     union$year<-as.numeric(union$year)
     union$inflation<-as.numeric(union$inflation)
     #traçage des graphs
@@ -74,9 +78,9 @@ server <- function(input, output) {
 
     })
 
-  #'hc4' Pour afficher l'évolution du taux d'inflation dans le monde entier au fil des années
-  output$hc4<-renderHighchart({
-    world<-inf %>% filter(region=="World")
+  #'graph4' Pour afficher l'évolution du taux d'inflation dans le monde entier au fil des années
+  output$graph4<-renderHighchart({
+    world<-inf_data %>% filter(region=="World")
     world$year<-as.numeric(world$year)
     world$inflation<-as.numeric(world$inflation)
 
