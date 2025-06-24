@@ -16,7 +16,7 @@ Ce projet propose un tableau de bord interactif développé en **R Shiny** perme
 
 ## 📁 Structure du projet
 
-```bash
+```
 📦 inflation-dashboard
 ├── ui.R           # Interface utilisateur
 ├── server.R       # Logique serveur (backend)
@@ -31,8 +31,8 @@ Ce projet propose un tableau de bord interactif développé en **R Shiny** perme
     ├── chart3.png
     ├── chart4.png
     └── map.png
-
-⚙️ Fonctionnalités principales
+```
+## ⚙️ Fonctionnalités principales
 
     ✅ Visualisation de l’inflation par pays (graphiques linéaires interactifs)
 
@@ -44,51 +44,40 @@ Ce projet propose un tableau de bord interactif développé en **R Shiny** perme
 
     ✅ Carte interactive (Leaflet) avec taux d’inflation par pays et slider temporel
 
-📊 Exemple de visualisations
-Évolution du taux d'inflation (France)
+## 📊 Exemple de visualisations
+#### Évolution du taux d'inflation (France)
 <img src="img/chart1.png" width="500"/>
-Comparaison entre plusieurs pays
+#### Comparaison entre plusieurs pays
 <img src="img/chart2.png" width="500"/>
-Taux pour l'Union Européenne
+#### Taux pour l'Union Européenne
 <img src="img/chart3.png" width="500"/>
-Inflation mondiale
+#### Inflation mondiale
 <img src="img/chart4.png" width="500"/>
-Carte interactive
+#### Carte interactive
 <img src="img/map.png" width="500"/>
-📦 Technologies utilisées
 
-    R, Shiny, shinydashboard, shinyWidgets
+## 📦 Technologies utilisées
 
-    ggplot2, highcharter, leaflet
+R, Shiny, shinydashboard, shinyWidgets, ggplot2, highcharter, leaflet, dplyr, tidyr, readxl, geojsonio, htmlwidgets, RColorBrewer, sf, rvest
 
-    dplyr, tidyr, readxl, geojsonio
+## 🧹 Pré-traitement des données
 
-    htmlwidgets, RColorBrewer, sf, rvest
+- Transformation du jeu de données inflation.xls avec gather() pour passer en format long.
+- Nettoyage des noms de pays et identification des régions économiques.
+- Jointure avec les données géospatiales (.geojson) pour affichage cartographique.
 
-🧹 Pré-traitement des données
+## 📂 Données
+- Source principale : Banque Mondiale, IMF
+- Fichier principal : inflation.xls (fréquence annuelle 1980–2022)
+- Géospatiales : 50m.geojson (source : datahub.io)
 
-    Transformation du jeu de données inflation.xls avec gather() pour passer en format long.
-
-    Nettoyage des noms de pays et identification des régions économiques.
-
-    Jointure avec les données géospatiales (.geojson) pour affichage cartographique.
-
-📂 Données
-
-    Source principale : Banque Mondiale, IMF
-
-    Fichier principal : inflation.xls (fréquence annuelle 1980–2022)
-
-    Géospatiales : 50m.geojson (source : datahub.io)
-
-📌 Auteur
-
+## 📌 Auteur
 Projet réalisé par MADANI Riad, 2022
+Contact : LinkedIn : Riad MADANI · Email : madani.riad@outlook.fr
 
-    Contact : LinkedIn · Email
-
-🚀 Lancer l'application
+## 🚀 Lancer l'application
 
 Dans RStudio :
-
+```
 shiny::runApp()
+```
