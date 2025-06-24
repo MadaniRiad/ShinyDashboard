@@ -45,15 +45,19 @@ Ce projet propose un tableau de bord interactif développé en **R Shiny** perme
     ✅ Carte interactive (Leaflet) avec taux d’inflation par pays et slider temporel
 
 ## 📊 Exemple de visualisations
-#### Évolution du taux d'inflation (France)
+### Évolution du taux d'inflation (France)
 <img src="img/chart1.png" width="500"/>
-#### Comparaison entre plusieurs pays
+
+### Comparaison entre plusieurs pays
 <img src="img/chart2.png" width="500"/>
-#### Taux pour l'Union Européenne
+
+### Taux pour l'Union Européenne
 <img src="img/chart3.png" width="500"/>
-#### Inflation mondiale
+
+### Inflation mondiale
 <img src="img/chart4.png" width="500"/>
-#### Carte interactive
+
+### Carte interactive
 <img src="img/map.png" width="500"/>
 
 ## 📦 Technologies utilisées
